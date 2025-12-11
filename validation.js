@@ -8,7 +8,7 @@ const verifySignature = function (req, res, next) {
   } else {
     let elements = signature.split('=');
     let signatureHash = elements[1];
-    let expectedHash = crypto.createHmac('sha1', process.env.APP_SECRET).update(JSON.stringify(req.body)).digest('hex');
+    let expectedHash = crypto.createHmac('sha256', process.env.APP_SECRET).update(JSON.stringify(req.body)).digest('hex');
     if (signatureHash != expectedHash) {
       res.status(403).send('Verification failed');
       return;

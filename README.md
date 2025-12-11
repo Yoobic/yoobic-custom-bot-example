@@ -12,7 +12,7 @@ The webhook should be secured with a secret key that is shared between the bot a
 
 the secret key is generated upon bot creation
 
-The webhook receives a `x-hub-signature` header that is a HMAC signature of the request body. The signature is generated using the secret key and the SHA1 algorithm. The server should generate the signature using the secret key and compare it to the signature provided in the header. If the signatures match, the request is authentic.
+The webhook receives a `x-hub-signature` header that is a HMAC signature of the request body. The signature is generated using the secret key and the SHA256 algorithm. The server should generate the signature using the secret key and compare it to the signature provided in the header. If the signatures match, the request is authentic.
 
 ### Example Middleware
 
@@ -29,7 +29,7 @@ const verifySignature = function (req, res, next) {
   } else {
     let elements = signature.split('=');
     let signatureHash = elements[1];
-    let expectedHash = crypto.createHmac('sha1', BOT_SECRET).update(JSON.stringify(req.body)).digest('hex');
+    let expectedHash = crypto.createHmac('sha256', BOT_SECRET).update(JSON.stringify(req.body)).digest('hex');
     if (signatureHash != expectedHash) {
       res.status(403).send('Verification failed');
       return;
